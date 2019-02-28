@@ -1,0 +1,38 @@
+web:
+  restart: always
+  build: .
+  expose:
+    - "8000"
+  links:
+    - db
+  volumes:
+    - /usr/src/app
+    - /usr/src/app/static
+  env_file: .env
+  command: gunicorn DockerProj.wsgi:application -w 2 -b :8000
+
+db:
+  restart: always
+  image: mysql
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: root
+    MYSQL_PASSWORD: root
+    MYSQL_DATABASE: djangodocker_db
+  volumes:
+    - pgdata:/var/lib/postgresql/data/
+
+#nginx:
+#  restart: always
+#  build: ./nginx/
+#  ports:
+#    - "80:80"
+#  volumes:
+#    - /www/static
+#  volumes_from:
+#    - web
+#  links:
+#    - web:web
+
